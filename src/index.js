@@ -1,6 +1,7 @@
 import './pages/index.css';
 import {initialCards, createCard} from "./scripts/cards";
 import {closeModal, openModal, closeModalOverlay, closeModalEsc} from "./scripts/modal";
+import {handleLikeCard} from "./scripts/cards";
 
 // @todo: DOM узлы
 const cardList = document.querySelector(".places__list");
@@ -21,6 +22,9 @@ const descriptionProfile = document.querySelector(".profile__description");
 //Данные попапов
 const titleChangeProfile = document.querySelector(".popup__input_type_name");
 const descriptionChangeProfile = document.querySelector(".popup__input_type_description");
+const nameCardInput = document.querySelector(".popup__input_type_card-name");
+const imgUrlCardInput = document.querySelector(".popup__input_type_url");
+
 
 function handleProfileSubmit(event) {
     event.preventDefault();
@@ -34,13 +38,22 @@ function handleProfileSubmit(event) {
 function handleNewCardSubmit(event) {
     event.preventDefault();
 
-    const nameCard = document.querySelector(".popup__input_type_card-name");
-    const imgUrlCard = document.querySelector(".popup__input_type_url");
-
-    cardList.prepend(createCard(nameCard.value, imgUrlCard.value));
-    nameCard.value = '';
-    imgUrlCard.value = '';
+    cardList.prepend(createCard(nameCardInput.value, imgUrlCardInput.value, handleLikeCard, handleImgCardPopup));
     closeModal(addPopup);
+}
+
+function handleImgCardPopup(name, urlImage) {
+    const imgCardPopup = document.querySelector(".popup__image");
+    const infoCardPopup = document.querySelector(".popup__caption");
+    imgPopup.addEventListener("click", (event)=> {
+        closeModalOverlay(event, imgPopup);
+    });
+
+    imgCardPopup.src = urlImage;
+    infoCardPopup.textContent = name;
+    imgCardPopup.alt = name;
+
+    openModal(imgPopup);
 }
 
 document.querySelectorAll('.popup__close').forEach(elem => {
@@ -62,6 +75,8 @@ editButton.addEventListener('click', (elem) => {
 })
 
 addButton.addEventListener('click', (elem) => {
+    nameCardInput.value = '';
+    imgUrlCardInput.value = '';
     addPopup.addEventListener('click', (elem) => {
         closeModalOverlay(elem, addPopup);
     })
@@ -71,7 +86,7 @@ addButton.addEventListener('click', (elem) => {
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach((item) => {
-    const cardElement = createCard(item.name, item.link);
+    const cardElement = createCard(item.name, item.link, handleLikeCard, handleImgCardPopup);
     cardList.append(cardElement);
 })
 
