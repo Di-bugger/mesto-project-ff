@@ -1,33 +1,37 @@
 import './pages/index.css';
-import {initialCards} from "./scripts/cards";
-
-// @todo: Темплейт карточки
-const templateCard = document.querySelector("#card-template").content;
+import {initialCards, createCard} from "./scripts/cards";
+import {closeModal, openModal, closeModalOverlay, closeModalEsc} from "./scripts/modal";
 
 // @todo: DOM узлы
 const cardList = document.querySelector(".places__list");
 
-// @todo: Функция создания карточки
-function createCard(name, urlImage) {
+// Кнопки открытия
+const editButton = document.querySelector(".profile__edit-button");
+const addButton = document.querySelector(".profile__add-button");
 
-    const card = templateCard.querySelector(".card").cloneNode(true);
-    const cardImage = card.querySelector(".card__image");
-    cardImage.src = urlImage;
-    cardImage.alt = name;
-    card.querySelector(".card__title").textContent = name;
+// Попапы
+const editPopup = document.querySelector(".popup_type_edit");
+const addPopup = document.querySelector(".popup_type_new-card");
+const imgPopup = document.querySelector(".popup_type_image");
 
-    card.querySelector(".card__delete-button").addEventListener("click", deleteCard);
+// Данные информации аккаунта
+const titleProfile = document.querySelector(".profile__title");
+const descriptionProfile = document.querySelector(".profile__description");
 
-    return card;
-}
+//Данные попапов
+const titleChangeProfile = document.querySelector(".popup__input_type_name");
+const descriptionChangeProfile = document.querySelector(".popup__input_type_description");
 
-// @todo: Функция удаления карточки
-function deleteCard(event) {
-    event.target.parentElement.remove();
-}
+
+document.querySelectorAll('.popup__close').forEach(elem => {
+    elem.addEventListener('click', elem => {
+        closeModal(elem.closest('.popup'))
+    })
+})
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach((item) => {
     const cardElement = createCard(item.name, item.link);
     cardList.append(cardElement);
 })
+
