@@ -38,7 +38,6 @@ function handleNewCardSubmit(event) {
     const imgUrlCard = document.querySelector(".popup__input_type_url");
 
     cardList.prepend(createCard(nameCard.value, imgUrlCard.value));
-
     nameCard.value = '';
     imgUrlCard.value = '';
     closeModal(addPopup);
