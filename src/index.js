@@ -22,11 +22,52 @@ const descriptionProfile = document.querySelector(".profile__description");
 const titleChangeProfile = document.querySelector(".popup__input_type_name");
 const descriptionChangeProfile = document.querySelector(".popup__input_type_description");
 
+function handleProfileSubmit(event) {
+    event.preventDefault();
+
+    titleProfile.textContent = titleChangeProfile.value;
+    descriptionProfile.textContent = descriptionChangeProfile.value;
+
+    closeModal(editPopup);
+}
+
+function handleNewCardSubmit(event) {
+    event.preventDefault();
+
+    const nameCard = document.querySelector(".popup__input_type_card-name");
+    const imgUrlCard = document.querySelector(".popup__input_type_url");
+
+    cardList.prepend(createCard(nameCard.value, imgUrlCard.value));
+
+    nameCard.value = '';
+    imgUrlCard.value = '';
+    closeModal(addPopup);
+}
 
 document.querySelectorAll('.popup__close').forEach(elem => {
-    elem.addEventListener('click', elem => {
+    elem.addEventListener('click', event => {
         closeModal(elem.closest('.popup'))
     })
+})
+
+editButton.addEventListener('click', (elem) => {
+    titleChangeProfile.value = titleProfile.textContent;
+    descriptionChangeProfile.value = descriptionProfile.textContent;
+    editPopup.addEventListener('click', (elem) => {
+        closeModalOverlay(elem, editPopup);
+    })
+    editPopup.addEventListener('submit', (elem) => {
+        handleProfileSubmit(elem)
+    })
+    openModal(editPopup);
+})
+
+addButton.addEventListener('click', (elem) => {
+    addPopup.addEventListener('click', (elem) => {
+        closeModalOverlay(elem, addPopup);
+    })
+    addPopup.addEventListener('submit', handleNewCardSubmit)
+    openModal(addPopup);
 })
 
 // @todo: Вывести карточки на страницу
