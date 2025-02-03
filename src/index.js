@@ -1,7 +1,7 @@
 import './pages/index.css';
-import {initialCards, createCard} from "./scripts/cards";
-import {closeModal, openModal, closeModalOverlay, closeModalEsc} from "./scripts/modal";
-import {handleLikeCard} from "./scripts/cards";
+import {initialCards} from "./scripts/cards";
+import {closeModal, openModal, closeModalOverlay} from "./scripts/modal";
+import {handleLikeCard, createCard, deleteCard} from "./scripts/card";
 
 // @todo: DOM узлы
 const cardList = document.querySelector(".places__list");
@@ -38,16 +38,14 @@ function handleProfileSubmit(event) {
 function handleNewCardSubmit(event) {
     event.preventDefault();
 
-    cardList.prepend(createCard(nameCardInput.value, imgUrlCardInput.value, handleLikeCard, handleImgCardPopup));
+    cardList.prepend(createCard(nameCardInput.value, imgUrlCardInput.value, handleLikeCard, handleImgCardPopup, deleteCard));
     closeModal(addPopup);
 }
 
 function handleImgCardPopup(name, urlImage) {
     const imgCardPopup = document.querySelector(".popup__image");
     const infoCardPopup = document.querySelector(".popup__caption");
-    imgPopup.addEventListener("click", (event)=> {
-        closeModalOverlay(event, imgPopup);
-    });
+    imgPopup.addEventListener("click", closeModalOverlay);
 
     imgCardPopup.src = urlImage;
     infoCardPopup.textContent = name;
@@ -56,37 +54,34 @@ function handleImgCardPopup(name, urlImage) {
     openModal(imgPopup);
 }
 
-document.querySelectorAll('.popup__close').forEach(elem => {
-    elem.addEventListener('click', event => {
-        closeModal(elem.closest('.popup'))
-    })
-})
-
 editButton.addEventListener('click', (elem) => {
     titleChangeProfile.value = titleProfile.textContent;
     descriptionChangeProfile.value = descriptionProfile.textContent;
-    editPopup.addEventListener('click', (elem) => {
-        closeModalOverlay(elem, editPopup);
-    })
-    editPopup.addEventListener('submit', (elem) => {
-        handleProfileSubmit(elem)
-    })
+    editPopup.addEventListener('click', closeModalOverlay )
+
     openModal(editPopup);
 })
 
 addButton.addEventListener('click', (elem) => {
     nameCardInput.value = '';
     imgUrlCardInput.value = '';
-    addPopup.addEventListener('click', (elem) => {
-        closeModalOverlay(elem, addPopup);
-    })
-    addPopup.addEventListener('submit', handleNewCardSubmit)
+    addPopup.addEventListener('click', closeModalOverlay)
+
     openModal(addPopup);
 })
 
+document.querySelectorAll('.popup__close').forEach(elem => {
+    elem.addEventListener('click', event => {
+        closeModal(elem.closest('.popup'))
+    })
+})
+
+addPopup.addEventListener('submit', handleNewCardSubmit)
+editPopup.addEventListener('submit', handleProfileSubmit)
+
 // @todo: Вывести карточки на страницу
 initialCards.forEach((item) => {
-    const cardElement = createCard(item.name, item.link, handleLikeCard, handleImgCardPopup);
+    const cardElement = createCard(item.name, item.link, handleLikeCard, handleImgCardPopup, deleteCard);
     cardList.append(cardElement);
 })
 
