@@ -13,12 +13,13 @@ function closeModalOverlay(event) {
 function closeModal(popup) {
     popup.classList.remove('popup_is-opened');
     document.removeEventListener('keydown', closeModalEsc);
-    document.removeEventListener('keydown', closeModalOverlay);
+    document.removeEventListener('click', closeModalOverlay);
 }
 
 function openModal(popup) {
     popup.classList.add('popup_is-opened');
-    document.addEventListener('keydown', closeModalEsc)
+    document.addEventListener('keydown', closeModalEsc);
+    popup.addEventListener('click', closeModalOverlay);
 }
 
 export {closeModal, closeModalOverlay, openModal};

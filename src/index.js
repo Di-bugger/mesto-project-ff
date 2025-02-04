@@ -45,7 +45,6 @@ function handleNewCardSubmit(event) {
 function handleImgCardPopup(name, urlImage) {
     const imgCardPopup = document.querySelector(".popup__image");
     const infoCardPopup = document.querySelector(".popup__caption");
-    imgPopup.addEventListener("click", closeModalOverlay);
 
     imgCardPopup.src = urlImage;
     infoCardPopup.textContent = name;
@@ -57,7 +56,6 @@ function handleImgCardPopup(name, urlImage) {
 editButton.addEventListener('click', (elem) => {
     titleChangeProfile.value = titleProfile.textContent;
     descriptionChangeProfile.value = descriptionProfile.textContent;
-    editPopup.addEventListener('click', closeModalOverlay )
 
     openModal(editPopup);
 })
@@ -65,7 +63,6 @@ editButton.addEventListener('click', (elem) => {
 addButton.addEventListener('click', (elem) => {
     nameCardInput.value = '';
     imgUrlCardInput.value = '';
-    addPopup.addEventListener('click', closeModalOverlay)
 
     openModal(addPopup);
 })
