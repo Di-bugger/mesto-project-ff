@@ -2,6 +2,7 @@ import './pages/index.css';
 import {initialCards} from "./scripts/cards";
 import {closeModal, openModal, closeModalOverlay} from "./scripts/modal";
 import {handleLikeCard, createCard, deleteCard} from "./scripts/card";
+import {enableValidation} from "./scripts/validation";
 
 // @todo: DOM узлы
 const cardList = document.querySelector(".places__list");
@@ -71,6 +72,15 @@ document.querySelectorAll('.popup__close').forEach(elem => {
     elem.addEventListener('click', event => {
         closeModal(elem.closest('.popup'))
     })
+})
+
+enableValidation({
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
 })
 
 addPopup.addEventListener('submit', handleNewCardSubmit)
