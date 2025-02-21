@@ -7,8 +7,6 @@
 //     errorClass: 'popup__error_visible'
 // }
 
-import {validate} from "@babel/core/lib/config/validation/options";
-
 const showInputError = (arrayConfig, formElement, inputElement, errorMessage) => {
 
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
@@ -31,6 +29,11 @@ const hasInvalidInput = (inputList) => {
 }
 
 const checkInputValidity = (arrayConfig ,formElement, inputElement) => {
+    if (inputElement.validity.patternMismatch) {
+        inputElement.setCustomValidity(inputElement.dataset.errorMessage);
+    } else {
+        inputElement.setCustomValidity("");
+    }
     if (!inputElement.validity.valid) {
         showInputError(arrayConfig ,formElement, inputElement, inputElement.validationMessage);
     } else {
@@ -57,6 +60,15 @@ const setEventListener = (arrayConfig, formElement) => {
     })
 }
 
+const clearValidation = (formElement, arrayConfig) => {
+    const inputList = Array.from(formElement.querySelectorAll(arrayConfig.inputSelector));
+    const buttonElement = formElement.querySelector(arrayConfig.submitButtonSelector);
+    inputList.forEach((inputElement) => {
+        hideInputError(arrayConfig, formElement, inputElement);
+    })
+    toggleButtonState(inputList, buttonElement, arrayConfig.inactiveButtonClass,);
+}
+
 const enableValidation = (arrayConfig) => {
     const formList = Array.from(document.querySelectorAll(arrayConfig.formSelector));
     formList.forEach((formElement) => {
@@ -68,4 +80,4 @@ const enableValidation = (arrayConfig) => {
 }
 
 
-export {enableValidation}
+export {enableValidation, clearValidation}

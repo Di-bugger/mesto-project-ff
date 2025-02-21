@@ -2,7 +2,7 @@ import './pages/index.css';
 import {initialCards} from "./scripts/cards";
 import {closeModal, openModal, closeModalOverlay} from "./scripts/modal";
 import {handleLikeCard, createCard, deleteCard} from "./scripts/card";
-import {enableValidation} from "./scripts/validation";
+import {enableValidation, clearValidation} from "./scripts/validation";
 
 // @todo: DOM узлы
 const cardList = document.querySelector(".places__list");
@@ -20,12 +20,25 @@ const imgPopup = document.querySelector(".popup_type_image");
 const titleProfile = document.querySelector(".profile__title");
 const descriptionProfile = document.querySelector(".profile__description");
 
+//Формы
+const editForm = document.querySelector(".popup__form[name='edit-profile']");
+const addForm = document.querySelector(".popup__form[name='new-place']");
+
 //Данные попапов
 const titleChangeProfile = document.querySelector(".popup__input_type_name");
 const descriptionChangeProfile = document.querySelector(".popup__input_type_description");
 const nameCardInput = document.querySelector(".popup__input_type_card-name");
 const imgUrlCardInput = document.querySelector(".popup__input_type_url");
 
+//
+const validationConfig = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+}
 
 function handleProfileSubmit(event) {
     event.preventDefault();
@@ -57,14 +70,14 @@ function handleImgCardPopup(name, urlImage) {
 editButton.addEventListener('click', (elem) => {
     titleChangeProfile.value = titleProfile.textContent;
     descriptionChangeProfile.value = descriptionProfile.textContent;
-
+    clearValidation(editForm,validationConfig)
     openModal(editPopup);
 })
 
 addButton.addEventListener('click', (elem) => {
     nameCardInput.value = '';
     imgUrlCardInput.value = '';
-
+    clearValidation(addForm,validationConfig)
     openModal(addPopup);
 })
 
@@ -74,14 +87,7 @@ document.querySelectorAll('.popup__close').forEach(elem => {
     })
 })
 
-enableValidation({
-    formSelector: '.popup__form',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__button',
-    inactiveButtonClass: 'popup__button_disabled',
-    inputErrorClass: 'popup__input_type_error',
-    errorClass: 'popup__error_visible'
-})
+enableValidation(validationConfig)
 
 addPopup.addEventListener('submit', handleNewCardSubmit)
 editPopup.addEventListener('submit', handleProfileSubmit)
