@@ -35,6 +35,15 @@ export const deleteCardId = (cardId) => {
     .then(getResponse)
 }
 
+export const setLikeCard = (cardId, isLiked) => {
+    const method = isLiked ? 'DELETE' : 'PUT'
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: method,
+        headers: config.headers
+    })
+        .then(getResponse)
+}
+
 export const updateUserInfo = (name, description) => {
     return fetch(`${config.baseUrl}/users/me`, {
         method: 'PATCH',
@@ -46,6 +55,17 @@ export const updateUserInfo = (name, description) => {
             name: name,
             about: description
         })
+    })
+        .then(getResponse)
+}
+
+export const updateAvatar = avatar => {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify({
+            avatar: avatar,
+        }),
     })
         .then(getResponse)
 }

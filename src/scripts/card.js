@@ -1,4 +1,4 @@
-import {deleteCardId} from "./api";
+import {deleteCardId, setLikeCard} from "./api";
 
 // @todo: Темплейт карточки
 const templateCard = document.querySelector("#card-template").content;
@@ -14,8 +14,18 @@ function deleteCard(card, cardId) {
         )
 }
 
-function handleLikeCard(card) {
-    card.querySelector('.card__like-button').classList.toggle('card__like-button_is-active')
+function handleLikeCard(likeBtn, cardId, likesCount) {
+    const isLiked = likeBtn.classList.contains("card__like-button_is-active");
+
+    setLikeCard(cardId, isLiked)
+        .then(card => {
+            likeBtn.classList.toggle("card__like-button_is-active")
+            console.log(card.likes.length)
+            likesCount.textContent = card.likes.length
+        })
+        .catch(error =>
+            console.log(error)
+        )
 }
 
 // @todo: Функция создания карточки
@@ -24,15 +34,18 @@ function createCard(cardId, name, urlImage, likes, ownerCardId, userId, likeActi
     const card = templateCard.querySelector(".card").cloneNode(true);
     const cardImage = card.querySelector(".card__image");
     const cardLikes = card.querySelector(".card__like");
+    const deleteButton =  card.querySelector(".card__delete-button")
+    const likeButton =  card.querySelector(".card__like-button")
+    const likesCount = card.querySelector(".card__like");
+    const cardHasLiked = likes.some(like =>
+        like._id === userId
+    )
     cardImage.src = urlImage;
     cardImage.alt = name;
     cardLikes.textContent = likes.length;
     card.querySelector(".card__title").textContent = name;
-    const deleteButton =  card.querySelector(".card__delete-button")
 
-    console.log(deleteButton)
     if (ownerCardId !== userId) {
-        console.log('delete btn')
         deleteButton.remove()
     } else {
         deleteButton.addEventListener("click", () => {
@@ -40,8 +53,12 @@ function createCard(cardId, name, urlImage, likes, ownerCardId, userId, likeActi
         });
     }
 
-    card.querySelector(".card__like-button").addEventListener("click", () => {
-        likeAction(card);
+    if (cardHasLiked) {
+        likeButton.classList.add('card__like-button_is-active')
+    }
+
+    likeButton.addEventListener("click", () => {
+        likeAction(likeButton, cardId, likesCount);
     });
     cardImage.addEventListener("click", () => {
         openImgPopup(name, urlImage)

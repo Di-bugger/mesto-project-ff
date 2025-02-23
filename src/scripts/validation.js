@@ -8,7 +8,6 @@
 // }
 
 const showInputError = (arrayConfig, formElement, inputElement, errorMessage) => {
-
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     inputElement.classList.add(arrayConfig.inputErrorClass);
     errorElement.textContent = errorMessage;
