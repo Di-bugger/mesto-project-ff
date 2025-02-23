@@ -11,12 +11,14 @@ function handleLikeCard(card) {
 }
 
 // @todo: Функция создания карточки
-function createCard(name, urlImage, likeAction, openImgPopup, deleteCard) {
+function createCard(name, urlImage, likes, likeAction, openImgPopup, deleteCard) {
 
     const card = templateCard.querySelector(".card").cloneNode(true);
     const cardImage = card.querySelector(".card__image");
+    const cardLikes = card.querySelector(".card__like");
     cardImage.src = urlImage;
     cardImage.alt = name;
+    cardLikes.textContent = likes.length;
     card.querySelector(".card__title").textContent = name;
 
     card.querySelector(".card__delete-button").addEventListener("click", deleteCard);

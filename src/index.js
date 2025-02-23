@@ -64,7 +64,7 @@ function handleNewCardSubmit(event) {
     postNewCard(nameCardInput.value, imgUrlCardInput.value)
         .then(result => {
             console.log(result);
-            cardList.prepend(createCard(result.name, result.link, handleLikeCard, handleImgCardPopup, deleteCard));
+            cardList.prepend(createCard(result.name, result.link, result.likes, handleLikeCard, handleImgCardPopup, deleteCard));
         })
         .catch(error => {
             console.log(error);
@@ -122,7 +122,7 @@ getInitialCards()
     .then(result => {
         console.log(result);
         result.forEach((item) => {
-            const cardElement = createCard(item.name, item.link, handleLikeCard, handleImgCardPopup, deleteCard);
+            const cardElement = createCard(item.name, item.link, item.likes, handleLikeCard, handleImgCardPopup, deleteCard);
             cardList.append(cardElement);
         })
     })
