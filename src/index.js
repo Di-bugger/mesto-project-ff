@@ -3,6 +3,7 @@ import {initialCards} from "./scripts/cards";
 import {closeModal, openModal, closeModalOverlay} from "./scripts/modal";
 import {handleLikeCard, createCard, deleteCard} from "./scripts/card";
 import {enableValidation, clearValidation} from "./scripts/validation";
+import {getInitialCards, getUser, updateUserInfo, postNewCard} from "./scripts/api";
 
 // @todo: DOM узлы
 const cardList = document.querySelector(".places__list");
@@ -17,8 +18,10 @@ const addPopup = document.querySelector(".popup_type_new-card");
 const imgPopup = document.querySelector(".popup_type_image");
 
 // Данные информации аккаунта
-const titleProfile = document.querySelector(".profile__title");
-const descriptionProfile = document.querySelector(".profile__description");
+const userContent = document.querySelector(".profile");
+const userImg = userContent.querySelector(".profile__image");
+const titleProfile = userContent.querySelector(".profile__title");
+const descriptionProfile = userContent.querySelector(".profile__description");
 
 //Формы
 const editForm = document.querySelector(".popup__form[name='edit-profile']");
@@ -43,8 +46,14 @@ const validationConfig = {
 function handleProfileSubmit(event) {
     event.preventDefault();
 
-    titleProfile.textContent = titleChangeProfile.value;
-    descriptionProfile.textContent = descriptionChangeProfile.value;
+    updateUserInfo(titleChangeProfile.value, descriptionChangeProfile.value)
+        .then(result => {
+            titleProfile.textContent = result.name;
+            descriptionProfile.textContent = result.about;
+        })
+        .catch((error)=> {
+            console.log(error);
+        })
 
     closeModal(editPopup);
 }
@@ -52,7 +61,15 @@ function handleProfileSubmit(event) {
 function handleNewCardSubmit(event) {
     event.preventDefault();
 
-    cardList.prepend(createCard(nameCardInput.value, imgUrlCardInput.value, handleLikeCard, handleImgCardPopup, deleteCard));
+    postNewCard(nameCardInput.value, imgUrlCardInput.value)
+        .then(result => {
+            console.log(result);
+            cardList.prepend(createCard(result.name, result.link, handleLikeCard, handleImgCardPopup, deleteCard));
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
     closeModal(addPopup);
 }
 
@@ -65,6 +82,13 @@ function handleImgCardPopup(name, urlImage) {
     imgCardPopup.alt = name;
 
     openModal(imgPopup);
+}
+
+function renderUserInfo(name, description, img) {
+    userImg.style.backgroundImage = `url(${img})`;
+    titleProfile.textContent = name;
+    userImg.alt = name;
+    descriptionProfile.textContent = description
 }
 
 editButton.addEventListener('click', (elem) => {
@@ -92,9 +116,29 @@ enableValidation(validationConfig)
 addPopup.addEventListener('submit', handleNewCardSubmit)
 editPopup.addEventListener('submit', handleProfileSubmit)
 
+
 // @todo: Вывести карточки на страницу
-initialCards.forEach((item) => {
-    const cardElement = createCard(item.name, item.link, handleLikeCard, handleImgCardPopup, deleteCard);
-    cardList.append(cardElement);
-})
+getInitialCards()
+    .then(result => {
+        console.log(result);
+        result.forEach((item) => {
+            const cardElement = createCard(item.name, item.link, handleLikeCard, handleImgCardPopup, deleteCard);
+            cardList.append(cardElement);
+        })
+    })
+    .catch((error)=> {
+        console.log(error);
+    })
+
+getUser()
+    .then(result => {
+        renderUserInfo(result.name, result.about, result.avatar)
+    })
+    .catch((error)=> {
+        console.log(error);
+    })
+
+
+
+
 
