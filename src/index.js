@@ -42,6 +42,7 @@ const validationConfig = {
     inputErrorClass: 'popup__input_type_error',
     errorClass: 'popup__error_visible'
 }
+let currentUserId = null
 
 function handleProfileSubmit(event) {
     event.preventDefault();
@@ -64,7 +65,7 @@ function handleNewCardSubmit(event) {
     postNewCard(nameCardInput.value, imgUrlCardInput.value)
         .then(result => {
             console.log(result);
-            cardList.prepend(createCard(result.name, result.link, result.likes, handleLikeCard, handleImgCardPopup, deleteCard));
+            cardList.prepend(createCard( result._id ,result.name, result.link, result.likes, result.owner._id, currentUserId, handleLikeCard, handleImgCardPopup, deleteCard));
         })
         .catch(error => {
             console.log(error);
@@ -116,27 +117,19 @@ enableValidation(validationConfig)
 addPopup.addEventListener('submit', handleNewCardSubmit)
 editPopup.addEventListener('submit', handleProfileSubmit)
 
+Promise.all([getUser(), getInitialCards()])
+    .then(([userInfo, initialCards]) => {
+        currentUserId = userInfo._id
+        renderUserInfo(userInfo.name, userInfo.about, userInfo.avatar)
 
-// @todo: Вывести карточки на страницу
-getInitialCards()
-    .then(result => {
-        console.log(result);
-        result.forEach((item) => {
-            const cardElement = createCard(item.name, item.link, item.likes, handleLikeCard, handleImgCardPopup, deleteCard);
+        initialCards.forEach(item => {
+            const cardElement = createCard(item._id, item.name, item.link, item.likes, item.owner._id, currentUserId,  handleLikeCard, handleImgCardPopup, deleteCard);
             cardList.append(cardElement);
         })
     })
-    .catch((error)=> {
-        console.log(error);
-    })
-
-getUser()
-    .then(result => {
-        renderUserInfo(result.name, result.about, result.avatar)
-    })
-    .catch((error)=> {
-        console.log(error);
-    })
+    .catch(error =>
+        console.log(error)
+    )
 
 
 
