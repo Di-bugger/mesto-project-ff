@@ -43,8 +43,10 @@ const checkInputValidity = (arrayConfig ,formElement, inputElement) => {
 const toggleButtonState = (inputList, buttonElement, buttonErrorClass) => {
     if (hasInvalidInput(inputList)) {
         buttonElement.classList.add(buttonErrorClass);
+        buttonElement.setAttribute('disabled', true)
     } else {
         buttonElement.classList.remove(buttonErrorClass);
+        buttonElement.removeAttribute('disabled')
     }
 }
 

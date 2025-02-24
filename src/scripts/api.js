@@ -47,10 +47,7 @@ export const setLikeCard = (cardId, isLiked) => {
 export const updateUserInfo = (name, description) => {
     return fetch(`${config.baseUrl}/users/me`, {
         method: 'PATCH',
-        headers: {
-            authorization: '1d7b250b-a7ef-48e2-a5e5-2b29c1b122cd',
-            'Content-Type': 'application/json'
-        },
+        headers: config.headers ,
         body: JSON.stringify({
             name: name,
             about: description
@@ -73,10 +70,7 @@ export const updateAvatar = avatar => {
 export const postNewCard = (name, link) => {
     return fetch(`${config.baseUrl}/cards`, {
         method: 'POST',
-        headers: {
-            authorization: '1d7b250b-a7ef-48e2-a5e5-2b29c1b122cd',
-            'Content-Type': 'application/json'
-        },
+        headers: config.headers,
         body: JSON.stringify({
             name: name,
             link: link
